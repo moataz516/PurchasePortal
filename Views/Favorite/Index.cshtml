@@ -1,0 +1,39 @@
+﻿@using PurchasePortal.Web.Models.DTOs.Favorite
+@model IEnumerable<FavoritDto>
+
+@{
+    ViewData["Title"] = "My Favorites";
+}
+
+<h2 class="my-4">My Favorites</h2>
+
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img class="card-img-top" src="@item.Image" alt="@item.Name" />
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Name</h5>
+                        <p class="card-text">@item.Price.ToString("C")</p>
+                        <p class="card-text">Stock: @item.StockQuantity</p>
+                    </div>
+                    <div class="card-footer">
+                        <form method="post" asp-action="DeleteFavorite" asp-controller="Favorite" style="display:inline;">
+                            <input type="hidden" name="productId" value="@item.Id" />
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form method="post" asp-action="ClearFavoritesAsync">
+                <button type="submit" class="btn btn-warning btn-block mt-4">Clear Favorites</button>
+            </form>
+        </div>
+    </div>
+</div>

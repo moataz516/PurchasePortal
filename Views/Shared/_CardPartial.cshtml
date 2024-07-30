@@ -1,0 +1,27 @@
+﻿@using PurchasePortal.Web.Models.DTOs.Product
+
+@model ProductDto
+
+
+<div class="card" style="height: 325px; max-height: 325px;">
+    <div style="height: 150px;">
+        <img class="card-img-top" src="@Model.Image" style="height: 100%;" />
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">@Model.Name</h5>
+        <p class="card-text clamp-2-lines">@Model.Description</p>
+      <div class="btn-group" role="group" aria-label="Product Actions ">
+            <a href="@Url.Action("ProductDetails", "Product", new { slug = Model.Slug })" class="btn btn-primary btn-sm">Details</a>
+            @if (User.IsInRole("Admin") && User.Identity.IsAuthenticated)
+            {
+                    <button type="button" class="btn btn-warning btn-sm mx-2" data-id="@Model.Id" data-bs-toggle="modal" data-bs-target="#updateProductModal">
+                        Update
+                    </button>
+
+                    <button type="button" class="btn btn-danger btn-sm mx-2" data-id="@Model.Id" data-bs-toggle="modal" data-bs-target="#deleteProductModal">
+                        Delete
+                    </button>
+            }
+       </div>
+    </div>
+</div>

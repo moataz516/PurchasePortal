@@ -1,0 +1,36 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using PurchasePortal.Web.Services
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div >
+        <div class="d-flex">
+
+        <a class="nav-link" href="@Url.Action("Index", "Favorite")">
+            <i class="fa-solid fa-lg fa-heart" style="color:red"></i>
+            <span id="favorite-count">
+            </span>
+        </a>
+
+            <a class="nav-link" href="@Url.Action("Index", "Cart")">
+                <i class="fa-solid fa-lg fa-cart-shopping" style="color:black"></i>
+            <span id="cart-count">
+            </span>
+        </a>
+        </div>
+        Hello, @User.Claims.FirstOrDefault(c => c.Type == "FirstName" )?.Value |
+        <form asp-controller="Account" asp-action="Logout" method="post" style="display:inline">
+            <button type="submit" class="btn btn-link">Logout</button>
+        </form>
+    </div>
+}
+else
+{
+    <div>
+        <a href="@Url.Action("Register", "Account")" class="btn btn-link">Register</a> |
+        <a href="@Url.Action("Login", "Account")" class="btn btn-link">Login</a>
+    </div>
+}

@@ -1,0 +1,17 @@
+﻿@using PurchasePortal.Web.Models.DTOs.Category
+@model List<CategoryDto>
+
+    <div class="row">
+        <div class="col">
+            <ul class="nav">
+                @foreach (var category in Model)
+                {
+                    <li class="nav-item">
+                    <a href="@Url.Action("ProductsBySearch", "Product", new { catId = category.Id})" class="nav-link">
+                            @category.Name
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>

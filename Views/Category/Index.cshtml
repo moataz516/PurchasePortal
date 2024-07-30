@@ -1,0 +1,214 @@
+﻿@using PurchasePortal.Web.Models.DTOs.Category
+@using PurchasePortal.Web.Models.DTOs.PromotionCategory
+@model List<CategoryDto>
+
+@{
+    ViewData["Title"] = "Category Index";
+}
+
+<h1>Categories</h1>
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createCategoryModal">
+    Add Category
+</button>
+
+
+@await Html.PartialAsync("CategoryModal/_CreateCategoryPartial", new CreateCategory())
+@await Html.PartialAsync("PromotionCategoryModal/_CreatePromotionCategory", new CreatePromotionCategoryDto())
+
+<div class="container mt-4">
+    <div class="table-responsive" style="height: 50vh; overflow-y: auto;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var category in Model)
+                {
+                    <tr>
+                        <td>@category.Name</td>
+                        <td>@category.Description</td>
+                        <td>
+                            <button type="button" class="btn btn-warning btn-sm edit-category-link" data-id="@category.Id" data-bs-toggle="modal" data-bs-target="#editCategoryModal">
+                                Edit
+                            </button>
+                            |
+                            <button type="button" class="btn btn-danger btn-sm" data-id="@category.Id" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPromotionCategoryModal">
+        Add Promotion
+    </button>
+
+    <div class="table-responsive mt-4" style="height: 50vh; overflow-y: auto;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Is Active</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var category in ViewData["PromotionCategories"] as List<PromotionCategoryDto>)
+                {
+                    <tr>
+                        <td>@category.Name</td>
+                        <td>
+                            <form asp-action="TogglePromotionStatus" asp-controller="PromotionCategory" asp-route-id="@category.Id" method="post">
+                                <input type="checkbox" onchange="this.form.submit()" @(category.IsActive ? "checked" : "") />
+                            </form>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-warning btn-sm" data-id="@category.Id" data-bs-toggle="modal" data-bs-target="#editPromotionCategoryModal">
+                                Edit
+                            </button>
+                            |
+                            <button type="button" class="btn btn-danger btn-sm" data-id="@category.Id" data-bs-toggle="modal" data-bs-target="#deletePromotionCategoryModal">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+
+<div class="modal fade" id="editPromotionCategoryModal" tabindex="-1" aria-labelledby="editPromotionCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="createPromotionCategoryModal" tabindex="-1" aria-labelledby="createPromotionCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="deleteCategoryModal" tabindex="-1" aria-labelledby="deleteCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="deletePromotionCategoryModal" tabindex="-1" aria-labelledby="deletePromotionCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            setupUpdateCategoryModal();
+            setupUpdatePromotionCategoryModal();
+            setupDeleteCategoryModal();
+            setupDeletePromotionCategoryModal();
+        });
+
+        function setupUpdateCategoryModal() {
+            const updateProductModal = document.getElementById('editCategoryModal');
+            updateProductModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget; // Button that triggered the modal
+                const id = button.getAttribute('data-id');
+
+                fetch('/EditCategoryModal/' + id)
+                    .then(response => response.text())
+                    .then(html => {
+                        const modalContent = document.querySelector('#editCategoryModal .modal-content');
+                        modalContent.innerHTML = html;
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        }
+
+        function setupDeleteCategoryModal() {
+            const deleteProductModal = document.getElementById('deleteCategoryModal');
+            deleteProductModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                const deleteCatId = button.getAttribute('data-id');
+
+                fetch('/category/delete/' + deleteCatId)
+                    .then(response => response.text())
+                    .then(html => {
+                        const modalContent = document.querySelector('#deleteCategoryModal .modal-content');
+                        modalContent.innerHTML = html;
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        }
+
+
+        function setupUpdatePromotionCategoryModal() {
+            const updateProductModal = document.getElementById('editPromotionCategoryModal');
+            updateProductModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget; 
+                const id = button.getAttribute('data-id');
+
+                fetch('/promotion/edit/' + id)
+                    .then(response => response.text())
+                    .then(html => {
+                        const modalContent = document.querySelector('#editPromotionCategoryModal .modal-content');
+                        modalContent.innerHTML = html;
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        }
+
+        function setupDeletePromotionCategoryModal() {
+            const updateProductModal = document.getElementById('deletePromotionCategoryModal');
+            updateProductModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget; // Button that triggered the modal
+                const id = button.getAttribute('data-id');
+
+                fetch('/promotion/delete/' + id)
+                    .then(response => response.text())
+                    .then(html => {
+                        const modalContent = document.querySelector('#deletePromotionCategoryModal .modal-content');
+                        modalContent.innerHTML = html;
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        }
+        
+    </script>
+}

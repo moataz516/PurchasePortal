@@ -1,0 +1,49 @@
+﻿@using PurchasePortal.Web.Models.DTOs.Product
+@model List<ProductIndexDto>
+
+
+
+
+<div class="container mt-4">
+    <div class="table-responsive" style="height: 50vh; overflow-y: auto;">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Stock Quantity</th>
+                    <th>Image</th>
+                    <th>Discount</th>
+                    <th>Quantity Sold</th>
+                    <th>Category</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Model)
+                {
+                    <tr>
+                        <td>@product.Name</td>
+                        <td>@product.Price.ToString("C")</td>
+                        <td>@product.StockQuantity</td>
+                        <td>
+                            <img src="@product.Image" alt="@product.Name" width="50" height="50" />
+                        </td>
+                        <td>@product.Discount.ToString("P")</td>
+                        <td>@product.QuantitySold</td>
+                        <td>@product.CategoryName</td>
+                        <td>
+                            <button type="button" class="btn btn-warning btn-sm edit-product-link" data-id="@product.Id" data-bs-toggle="modal" data-bs-target="#editProductModal">
+                                Edit
+                            </button>
+                            |
+                            <button type="button" class="btn btn-danger btn-sm" data-id="@product.Id" data-bs-toggle="modal" data-bs-target="#deleteProductModal">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,58 @@
+﻿@using PurchasePortal.Web.Models.DTOs.Product
+
+
+@model List<ProductDto>
+
+<h2>Products in Category</h2>
+
+@if (TempData["InfoMessage"] != null)
+{
+    <div class="alert alert-info">
+        @TempData["InfoMessage"]
+    </div>
+}
+
+<form method="get">
+    <div class="form-group">
+        <label for="filter">Filter by Name/Description:</label>
+        <input type="text" id="filter" name="filter" class="form-control" value="@ViewData["CurrentFilter"]" />
+    </div>
+    <div class="form-group">
+        <label for="sortBy">Sort by:</label>
+        <select id="sortBy" name="sortBy" class="form-control">
+            <option value="name" selected="@(ViewData["CurrentSort"]?.ToString() == "name" ? true : false)"> Name </option>
+            <option value="price" selected="@(ViewData["CurrentSort"]?.ToString() == "price" ? true : false)">Price</option>
+            <option value="stock" selected="@(ViewData["CurrentSort"]?.ToString() == "stock" ? true : false)">Stock Quantity</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Apply</button>
+</form>
+
+@if (Model != null && Model.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Stock Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>@product.Name</td>
+                    <td>@product.Description</td>
+                    <td>@product.Price</td>
+                    <td>@product.StockQuantity</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No products found for this category.</p>
+}

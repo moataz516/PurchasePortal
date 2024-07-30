@@ -1,0 +1,28 @@
+﻿@using PurchasePortal.Web.Models.DTOs.Order
+@model CheckoutSessionDto
+
+<h2>Order Summary</h2>
+
+<h3>Shipping Information</h3>
+<p><strong>Address:</strong> @Model.ShippingAddress.ShippingAddress</p>
+<p><strong>City:</strong> @Model.ShippingAddress.City</p>
+<p><strong>State:</strong> @Model.ShippingAddress.State</p>
+<p><strong>Postal Code:</strong> @Model.ShippingAddress.PostalCode</p>
+<p><strong>Country:</strong> @Model.ShippingAddress.Country</p>
+
+<h3>Cart Items</h3>
+<ul>
+    @foreach (var item in Model.CartItems)
+    {
+        <li>
+            <img src="@item.ProductImage" alt="@item.ProductName" width="50" height="50" />
+            <strong>@item.ProductName</strong> - @item.Quantity x @item.ProductPrice.ToString("C")
+        </li>
+    }
+</ul>
+
+<p><strong>Total Price:</strong> @Model.TotalPrice.ToString("C")</p>
+
+<form asp-action="PlaceOrder" method="post">
+    <button type="submit" class="btn btn-primary">Confirm Order</button>
+</form>
